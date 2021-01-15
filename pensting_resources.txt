@@ -1,0 +1,30 @@
+Interative shell commands:
+python -c 'import pty; pty.spawn("/bin/bash")'
+https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys
+
+
+"Priv Esc Checklist"
+
+Determining the kernel of the machine (kernel exploitation such as Dirtyc0w)
+Locating other services running or applications installed that may be abusable (SUID & out of date software)
+Looking for automated scripts like backup scripts (exploiting crontabs)
+Credentials (user accounts, application config files..)
+Mis-configured file and directory permissions
+
+https://payatu.com/guide-linux-privilege-escalation
+https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md#linux---privilege-escalation
+
+use find command before priv escalation.
+> find / -name id_rsa 2> /dev/null
+
+for SUID
+Let's confirm this by using find to search the machine for executables with the SUID permission set: 
+> find / -perm -u=s -type f 2>/dev/null
+https://gtfobins.github.io/gtfobins/bash/
+
+
+Dirty Cow exploit:
+https://github.com/FireFart/dirtycow/blob/master/dirty.c
+
+
