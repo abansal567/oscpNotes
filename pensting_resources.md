@@ -1,15 +1,16 @@
-#Cheat Sheet for Reverse Shell
+# Cheat Sheet for Reverse Shell
+
 https://web.archive.org/web/20200901140719/http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 
 Interative shell commands steps:
 * Using Python
 step-1:
->>python3 -c 'import pty; pty.spawn("/bin/bash")'
+python3 -c 'import pty; pty.spawn("/bin/bash")'
 step-2:
->>export TERM=xterm
+export TERM=xterm
 Setp-3:
 we will background the shell using Ctrl + Z. Back in our own terminal we use 
->>stty raw -echo; fg. 
+stty raw -echo; fg. 
 This does two things: first, it turns off our own terminal echo (which gives us access to tab autocompletes, the arrow keys, and Ctrl + C to kill processes). It then foregrounds the shell, thus completing the process. 
 
 * Using rlwrap
