@@ -1,2 +1,3 @@
 Upload php files in the php based application
 php extensions- .php.php3,.php4,.php5,.phtml
+php reverse shell- https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
