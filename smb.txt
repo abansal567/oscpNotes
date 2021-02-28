@@ -1,0 +1,17 @@
+Samba is based on the common client/server protocol of Server Message Block (SMB). 
+SMB is developed only for Windows, without Samba, 
+other computer platforms would be isolated from Windows machines, 
+even if they were part of the same network.
+
+SMB has two ports, 445 and 139
+Latest version runs on 445 port on top of a TCP stack.
+
+use this scripts tags in nmap to find the shares.
+nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 10.10.214.71
+
+That will give you the shares and the users to access the path
+
+- use smbclient //IP/sharename to access that share
+- use smbget smb://IP/sharname to download the files
+
+
