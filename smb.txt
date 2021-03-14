@@ -12,6 +12,10 @@ nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 10.10.214.71
 That will give you the shares and the users to access the path
 
 - use smbclient //IP/sharename to access that share
+also for a specific username:
+- smbclient //IP/sharename -U username
+
+
 - use smbget smb://IP/sharname to download the files
 
 

