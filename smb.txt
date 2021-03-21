@@ -8,7 +8,7 @@ Latest version runs on 445 port on top of a TCP stack.
 
 use this scripts tags in nmap to find the shares.
 nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 10.10.214.71
-
+smbclient -L \\\\IP\\ - list of shares
 That will give you the shares and the users to access the path
 
 - use smbclient //IP/sharename to access that share

