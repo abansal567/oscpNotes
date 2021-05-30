@@ -3,6 +3,6 @@ nmap -sC -sV $IP
 nmap -sU $IP
 
 Gobuster:
-gobuster dir -u http://10.10.75.35/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x html,txt,php
+gobuster dir -u http://10.10.251.118/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x html,txt,php
 
 john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt 

