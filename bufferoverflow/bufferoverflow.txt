@@ -5,7 +5,7 @@ help: https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/exploits/buffe
 Steps:
 1. Open your binary in the immunity debugger as a admin.
 2. from the attack box, access the binary app using
-> nc 10.10.76.111 1337
+> nc $IP 1337
 3. To set a working folder in mona, type:
 > !mona config -set workingfolder c:\mona\%p
 4. Fuzzing
@@ -27,6 +27,7 @@ You will notice that after sending certain bytes, the app get crashed.
 - run exploit.py which will crash the application.
 - run this in mona to find the offset:
 > !mona findmsp -distance 1700
+
 look for "EIP contains normal pattern : ... (offset XXXX)"
 - Update your exploit.py script and set the offset variable to this value (
 was previously set to 0). Set the payload variable to an empty string again. 

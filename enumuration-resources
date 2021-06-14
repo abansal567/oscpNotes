@@ -1,6 +1,7 @@
 nmap:
 nmap -sC -sV $IP 
 nmap -sU $IP
+Use -Pn if the machine does not respond to the ICMP (ping)
 
 Gobuster:
 gobuster dir -u http://10.10.251.118/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x html,txt,php

