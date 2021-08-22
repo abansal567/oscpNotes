@@ -1,0 +1,26 @@
+1. The first step in Linux privilege escalation exploitation is to check for files with the 
+SUID/GUID bit set. This means that the file or files can be run with the permissions of the 
+file(s) owner/group. In this case, as the super-user. We can leverage this to get a shell with these privileges!
+
+finding for file systems for suid/guid files.
+> find / -perm -u=s -type f 2>/dev/null
+
+2. Misconfigured Binaries and GTFOBins
+
+GTFOBins is a curated list of Unix binaries that can be exploited by an attacker to 
+bypass local security restrictions. It provides a really useful breakdown of how to 
+exploit a misconfigured binary and is the first place you should look if you find one on a CTF or Pentest. 
+
+https://gtfobins.github.io/
+
+3. Exploting Crontab
+
+ use msfvemon to generate the reverse shell code and put it in the script running as the priv esc account
+
+ 4. Exploiting path variable
+
+     https://github.com/netbiosX/Checklists/blob/master/Linux-Privilege-Escalation.md
+    https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md
+    https://sushant747.gitbooks.io/total-oscp-guide/privilege_escalation_-_linux.html
+    https://payatu.com/guide-linux-privilege-escalation
+    

